@@ -1,0 +1,132 @@
+---
+RITA Flight Delays by Wenny Wu
+========================================================
+
+Load the data:
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+setwd("C:/Users/Administrator/Desktop/Udacity_Data_Analyst_Nanodegree/Udacity-DAND-P6_Flights_Visualization/data")
+
+# Load the Data
+df <- read.csv('data.csv')
+
+library(ggplot2)
+library(dplyr)
+library(gridExtra)
+```
+
+Let's look at the data and summary statistics:
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+str(df)
+names(df)
+summary(df)
+```
+
+Data cleaning - re-format the date:
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+df$date <- as.Date(paste(df$year, df$X.month, 1, sep='-'), format="%Y-%m-%d")
+summary(df$date)
+```
+
+Create a table of delay information:
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+fl <- df %>%
+  group_by(date, year, airport, airport_name) %>%
+  summarize(arrivals = sum(arr_flights),
+            delayed = sum(arr_del15),
+            carrier_delays = sum(carrier_ct),
+            weather_delays = sum(X.weather_ct),
+            nas_delays = sum(nas_ct),
+            security_delays = sum(security_ct),
+            late_aircraft_delays = sum(late_aircraft_ct)) %>%
+  transform(on_time = 1 - delayed/arrivals)
+
+fl <- fl[complete.cases(fl),]
+```
+
+Plot delay information by airport:
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+pf <- ggplot(data = fl, aes(x = date, y = on_time)) +
+  geom_line(aes(color = airport))
+
+pf + theme(legend.position="none")
+```
+
+Plots are too messy. Subset to look at only some airports:
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# aggregate by airport
+agg_apt <- fl %>%
+  group_by(airport) %>%
+  summarize(monthly_avg = mean(arrivals),
+            arrivals = sum(arrivals))
+
+big_airports <- subset(agg_apt, monthly_avg >= quantile(monthly_avg, 0.98))$airport
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+fb <- subset(df, is.element(airport, big_airports)) %>%
+  group_by(year, airport, airport_name) %>%
+  summarize(arrivals = sum(arr_flights),
+            delayed = sum(arr_del15),
+            carrier_delays = sum(carrier_ct),
+            weather_delays = sum(X.weather_ct),
+            nas_delays = sum(nas_ct),
+            security_delays = sum(security_ct),
+            late_aircraft_delays = sum(late_aircraft_ct)) %>%
+  transform(on_time = 1 - delayed/arrivals)
+
+fb <- fb[complete.cases(fb),]
+```
+
+Plot delay information by largest airports:
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+pa1 <- ggplot(data = fb,
+       aes(x = year, y = on_time)) +
+  geom_line(aes(color = airport_name)) +
+  scale_x_continuous(limits=c(2003, 2015), breaks=c(2003:2015))
+  
+pa1
+```
+
+Plot more detailed delay info by airport - carrier delays, weather delays, nas delays, security delays, and late aircraft delays:
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+pc <- ggplot(data = fb,
+       aes(carrier_delays, fill = airport)) +  
+  geom_histogram(binwidth = 1000) + 
+  ggtitle('Carrier Delays')
+
+pw <- ggplot(data = fb,
+       aes(weather_delays, fill = airport)) +  
+  geom_histogram(binwidth = 500) + 
+  ggtitle('Weather Delays')
+
+pn <- ggplot(data = fb,
+       aes(nas_delays, fill = airport)) +  
+  geom_histogram(binwidth = 5000) + 
+  ggtitle('National Air System Delays')
+
+ps <- ggplot(data = fb,
+       aes(security_delays, fill = airport)) +  
+  geom_histogram(binwidth = 50) + 
+  ggtitle('Security Delays')
+
+pl <- ggplot(data = fb,
+       aes(late_aircraft_delays, fill = airport)) +  
+  geom_histogram(binwidth = 5000) + 
+  ggtitle('Late Aircraft Delays')
+
+grid.arrange(pc, pw, pn, ps, pl, ncol=3)
+```
+
+Write to csv:
+
+```{r}
+write.csv(fb, file="data_airport.csv", row.names=FALSE)
+```

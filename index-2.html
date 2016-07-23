@@ -1,0 +1,112 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>U.S. Domestic Flight Delays, 2003-2016</title>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="http://dimplejs.org/dist/dimple.v2.0.0.min.js"></script>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+      h2 {
+        color: gray;
+        text-align: center;
+      }
+    </style>
+
+    <script type="text/javascript">
+      format = d3.time.format("%Y");
+      function draw(data) {
+      
+      /*
+        D3.js setup code
+      */
+
+        'use strict';
+        var minOnTimeValue = (function(data, field) {
+          var minimum = 1;
+          data.forEach(function(record) {
+            if (record[field] < minimum) {
+              minimum = record[field];
+            }
+          });
+          return minimum;
+        })(data, 'on_time');
+        var minY = Math.round(minOnTimeValue*10)/10,
+            maxY = 1;
+        d3.select('#content')
+          .append('h2')
+          .attr('id', 'title')
+          .text('Average Annual U.S. Domestic Flight Delays (2003-2016)');
+        var width = 1050,
+            height = 500;
+        var svg = dimple.newSvg('#content', width, height);
+
+      /*
+        Dimple.js Chart construction code
+      */
+
+        var myChart = new dimple.chart(svg, data);
+        // set x axis
+        var x = myChart.addTimeAxis('x', 'year');
+        x.tickFormat = '%Y';
+        x.title = 'Year';
+        x.fontSize = 13;
+        // set y axis
+        var y = myChart.addMeasureAxis('y', 'on_time');
+        y.tickFormat = '%';
+        y.overrideMin = 0.63;
+        y.overrideMax = maxY;
+        y.title = '% of On-time Arrivals (within 15 mins)';
+        y.fontSize = 13;
+        myChart.addSeries('airport', dimple.plot.line);
+        myChart.addSeries('airport', dimple.plot.scatter);
+        myChart.addLegend(width*0.9, height*.35, width*.1, 120, 'right');
+        myChart.draw();
+
+        // handle mouse events on paths
+        d3.selectAll('path')
+          .style('opacity', 0.8)
+          .on('mouseover', function(e) {
+            d3.select(this)
+              .style('stroke-width', '6px')
+              .style('opacity', 1)
+              .attr('z-index', '1');
+        }).on('mouseleave', function(e) {
+            d3.select(this)
+              .style('stroke-width', '2px')
+              .style('opacity', 0.8)
+              .attr('z-index', '0');
+        });
+
+      }
+    </script>
+  </head>
+<body>
+  <div class="container">
+    <div class="row">
+      <section id="content" class="col-md-12"></section>
+    </div>
+  </div>
+
+
+  <script type="text/javascript">
+  /*
+    Use D3 (not dimple.js) to load the CSV file
+    and pass the contents of it to the draw function
+    */
+    d3.csv("data_airport.csv", function(d) {
+      return {
+        year: format.parse(d.year),
+        airport: d.airport,
+        on_time: +d.on_time,
+        carrier_delays: +d.carrier_delays/1000,
+        arrivals: +d.arrivals
+      };
+    }, function(error, data) {
+      // console.log(error);
+      draw(data);
+    });
+  </script>
+</body>
+</html>
