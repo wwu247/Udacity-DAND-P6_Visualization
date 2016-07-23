@@ -44,7 +44,9 @@ The second rendition of the plot is below:
 
 My initial submission feedback indicated that the reviewer did not find the visualization to center on a clear, specific finding in the data (i.e. a clear trend or pattern). To dive deeper into the data, I decided to visualize the delays on a more granular level, focusing on different reasons for delay (national aviation system, late-arriving aircraft, air carrier, extreme weather, and security). I also visualized these data with line-scatter plots to make easy comparisons with the on-time arrival chart, and the charts indicate that national aviation system delays contribute most heavily to overall delays, with Atlanta and Chicago showing significantly more national aviation system delays.
 
-![Final Visualization](http://wwu247.github.io/Udacity-DAND-P6_Flights_Visualization/)
+![National Aviation Systems Plot](https://raw.githubusercontent.com/wwu247/Udacity-DAND-P6_Visualization/master/img/index-nas.PNG)
+
+The final report is displayed in 'index-3.html'.
 
 ## Resources
 - [Udacity Lectures - Data Visualization and D3.js](https://classroom.udacity.com/nanodegrees/nd002)
