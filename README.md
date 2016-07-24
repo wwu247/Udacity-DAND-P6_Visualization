@@ -7,11 +7,11 @@ This data visualization shows average annual on-time arrivals for U.S. domestic 
 ## Initial Design
 After collecting the data from RITA, I loaded the data into R for some exploratory data analysis. I was curious about delays by airport - perhaps some airports have worse infrastructure, TSA operations, administration, etc. that could result in more delays. I wanted to see which airports performed the worst, but there was intially so much data that it was difficult to visualize anything of significance. I decided to aggregate the data, grouping by airport, and focus on the busiest airports. 
 
-![R Plot](https://raw.githubusercontent.com/wwu247/Udacity-DAND-P6_Flights_Visualization/master/png/on_time_airports.png)
+![R Plot](https://raw.githubusercontent.com/wwu247/Udacity-DAND-P6_Visualization/master/img/on_time_airports.png)
 
 I chose a line chart to display changes in airport performance via on-time arrivals over the years. A line chart is appropriate for time-series data and visualizing any trends or patterns that may exist in the data over a range of years, as is the case in this example. I also wanted to compare the performance of different airports over the timespan of interest. The plots generated in R showed some interesting fluctuations in on-time arrivals for the airports of interest - Chicago and Atlanta showed poorer performance for many years and higher overall variation. The next step was to improve the visualization with D3.js and dimple.js. My goals were to improve the axes and legend to enhance the visualization and overlay a scatterplot on top of the line plot so the viewer can see data points for each year. I generated the following plot:
 
-![Plot Version 1](https://raw.githubusercontent.com/wwu247/Udacity-DAND-P6_Flights_Visualization/master/png/index-initial.png)
+![Plot Version 1](https://raw.githubusercontent.com/wwu247/Udacity-DAND-P6_Visualization/master/img/index-initial.png)
 
 ## Feedback
 I conducted 3 interviews for feedback on the visualization, asking each person the following questions:
@@ -40,7 +40,7 @@ In lieu of the feedback comments, I extended the y-axis to center the data aroun
 
 The second rendition of the plot is below:
 
-![Plot Version 2](https://raw.githubusercontent.com/wwu247/Udacity-DAND-P6_Flights_Visualization/f31b21560ade0be04058435ccb973594d550e7cb/png/index-final.png)
+![Plot Version 2](https://raw.githubusercontent.com/wwu247/Udacity-DAND-P6_Visualization/master/img/index-final.png)
 
 My initial submission feedback indicated that the reviewer did not find the visualization to center on a clear, specific finding in the data (i.e. a clear trend or pattern). To dive deeper into the data, I decided to visualize the delays on a more granular level, focusing on different reasons for delay (national aviation system, late-arriving aircraft, air carrier, extreme weather, and security). I also visualized these data with line-scatter plots to make easy comparisons with the on-time arrival chart, and the charts indicate that national aviation system delays contribute most heavily to overall delays, with Atlanta and Chicago showing significantly more national aviation system delays.
 
