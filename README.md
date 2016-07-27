@@ -46,7 +46,8 @@ My initial submission feedback indicated that the reviewer did not find the visu
 
 ![National Aviation Systems Plot](https://raw.githubusercontent.com/wwu247/Udacity-DAND-P6_Visualization/master/img/index-nas.PNG)
 
-The final report is displayed in `index-3.html`.
+The final visualization: 
+![Visualization](https://rawgit.com/wwu247/Udacity-DAND-P6_Visualization/master/index-3.html)
 
 ## Resources
 - [Udacity Lectures - Data Visualization and D3.js](https://classroom.udacity.com/nanodegrees/nd002)
